@@ -24,7 +24,7 @@ public record RecipeRequest(
 
         @NotEmpty(message = "At least one ingredient is required")
         @Schema(description = "List of ingredients", example = "[\"pasta\", \"eggs\", \"pancetta\", \"parmesan\"]")
-        List<String> ingredients,
+        List<IngredientResponse> ingredients,
 
         @NotBlank(message = "Instructions are required")
         @Schema(description = "Cooking instructions", example = "Boil pasta. Mix eggs with cheese. Combine with pancetta.")

@@ -1,5 +1,6 @@
 package com.abnamro.recipes.integration;
 
+import com.abnamro.recipes.dto.IngredientResponse;
 import com.abnamro.recipes.dto.RecipeRequest;
 import com.abnamro.recipes.repository.RecipeRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -41,7 +42,9 @@ class RecipeIntegrationTest {
 
     private RecipeRequest buildRequest(String name, boolean vegetarian, int servings,
                                        List<String> ingredients, String instructions) {
-        return new RecipeRequest(name, vegetarian, servings, ingredients, instructions);
+        List<IngredientResponse> ingredientDtos = ingredients == null ? null :
+                ingredients.stream().map(i -> new IngredientResponse(i, null)).toList();
+        return new RecipeRequest(name, vegetarian, servings, ingredientDtos, instructions);
     }
 
     @Test

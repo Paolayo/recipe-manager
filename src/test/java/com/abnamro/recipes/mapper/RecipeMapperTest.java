@@ -1,5 +1,6 @@
 package com.abnamro.recipes.mapper;
 
+import com.abnamro.recipes.dto.IngredientResponse;
 import com.abnamro.recipes.dto.RecipeRequest;
 import com.abnamro.recipes.dto.RecipeResponse;
 import com.abnamro.recipes.model.Ingredient;
@@ -38,14 +39,18 @@ class RecipeMapperTest {
 
         RecipeResponse response = recipeMapper.toResponse(recipe);
 
-        assertThat(response.ingredients()).containsExactly("pasta", "tomato");
+        assertThat(response.ingredients())
+                .extracting(IngredientResponse::name)
+                .containsExactly("pasta", "tomato");
     }
 
     @Test
     @DisplayName("toEntity maps ingredient name strings to Ingredient entities")
     void toEntity_mapsIngredients() {
         RecipeRequest request = new RecipeRequest(
-                "Pasta", true, 2, List.of("pasta", "tomato"), "Boil pasta.");
+                "Pasta", true, 2,
+                List.of(new IngredientResponse("pasta", null), new IngredientResponse("tomato", null)),
+                "Boil pasta.");
 
         Recipe recipe = recipeMapper.toEntity(request);
 
@@ -57,7 +62,7 @@ class RecipeMapperTest {
     @Test
     @DisplayName("toStringList returns empty list when ingredients are null")
     void toStringList_null_returnsEmptyList() {
-        assertThat(recipeMapper.toStringList(null)).isEmpty();
+        assertThat(recipeMapper.toIngredientResponseList(null)).isEmpty();
     }
 
     @Test
@@ -80,7 +85,9 @@ class RecipeMapperTest {
         existing.setCreatedAt(originalCreatedAt);
 
         RecipeRequest update = new RecipeRequest(
-                "New Name", true, 4, List.of("pasta"), "New instructions.");
+                "New Name", true, 4,
+                List.of(new IngredientResponse("pasta", null)),
+                "New instructions.");
 
         recipeMapper.updateEntityFromRequest(update, existing);
 

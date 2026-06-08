@@ -14,6 +14,7 @@ CREATE TABLE recipe_ingredients (
     version     BIGINT NOT NULL DEFAULT 0,
     recipe_id   BIGINT NOT NULL,
     ingredient  VARCHAR(255) NOT NULL,
+    amount      NUMERIC,
     CONSTRAINT fk_recipe_ingredients_recipe FOREIGN KEY (recipe_id) REFERENCES recipes(id) ON DELETE CASCADE
 );
 

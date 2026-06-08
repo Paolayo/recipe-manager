@@ -1,5 +1,6 @@
 package com.abnamro.recipes.service;
 
+import com.abnamro.recipes.dto.IngredientResponse;
 import com.abnamro.recipes.dto.RecipeFilter;
 import com.abnamro.recipes.dto.RecipeRequest;
 import com.abnamro.recipes.dto.RecipeResponse;
@@ -55,7 +56,9 @@ class RecipeServiceImplTest {
                 .instructions("Boil pasta. Add sauce.")
                 .build();
 
-        request = new RecipeRequest("Pasta", true, 2, List.of("pasta", "tomato"), "Boil pasta. Add sauce.");
+        request = new RecipeRequest("Pasta", true, 2,
+                List.of(new IngredientResponse("pasta", null), new IngredientResponse("tomato", null)),
+                "Boil pasta. Add sauce.");
 
         response = new RecipeResponse(1L, null, "Pasta", true, 2, null, null, null, null);
     }

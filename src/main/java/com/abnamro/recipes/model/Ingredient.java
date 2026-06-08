@@ -15,6 +15,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+
 /**
  * Ingredient line item belonging to a {@link Recipe}, stored in the {@code recipe_ingredients} table.
  */
@@ -38,4 +40,7 @@ public class Ingredient {
 
     @Column(name = "ingredient", nullable = false)
     private String name;
+
+    @Column(name = "amount")
+    private BigDecimal amount;
 }

@@ -1,5 +1,6 @@
 package com.abnamro.recipes.controller;
 
+import com.abnamro.recipes.dto.IngredientResponse;
 import com.abnamro.recipes.dto.RecipeRequest;
 import com.abnamro.recipes.dto.RecipeResponse;
 import com.abnamro.recipes.exception.DuplicateRecipeException;
@@ -38,11 +39,13 @@ class RecipeControllerTest {
 
     private RecipeRequest validRequest;
     private RecipeResponse recipeResponse;
+    private List<IngredientResponse> ingredients;
 
     @BeforeEach
     void setUp() {
-        validRequest = new RecipeRequest("Pasta", true, 2, List.of("pasta", "tomato"), "Boil pasta and add sauce.");
-        recipeResponse = new RecipeResponse(1L, null, "Pasta", true, 2, List.of("pasta", "tomato"), "Boil pasta and add sauce.", null, null);
+        ingredients = List.of(new IngredientResponse("pasta", null), new IngredientResponse("tomato", null));
+        validRequest = new RecipeRequest("Pasta", true, 2, ingredients, "Boil pasta and add sauce.");
+        recipeResponse = new RecipeResponse(1L, null, "Pasta", true, 2, ingredients, "Boil pasta and add sauce.", null, null);
     }
 
     @Test
@@ -62,7 +65,7 @@ class RecipeControllerTest {
     @Test
     @DisplayName("POST /api/v1/recipes - should return 400 when name is blank")
     void createRecipe_invalidRequest_returns400() throws Exception {
-        validRequest = new RecipeRequest("", true, 2, List.of("pasta", "tomato"), "Boil pasta and add sauce.");
+        validRequest = new RecipeRequest("", true, 2, ingredients, "Boil pasta and add sauce.");
 
         mockMvc.perform(post("/api/v1/recipes")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -73,7 +76,7 @@ class RecipeControllerTest {
     @Test
     @DisplayName("POST /api/v1/recipes - should return 400 when servings is 0")
     void createRecipe_zeroServings_returns400() throws Exception {
-        validRequest = new RecipeRequest("Pasta", true, 0, List.of("pasta", "tomato"), "Boil pasta and add sauce.");
+        validRequest = new RecipeRequest("Pasta", true, 0, ingredients, "Boil pasta and add sauce.");
 
         mockMvc.perform(post("/api/v1/recipes")
                         .contentType(MediaType.APPLICATION_JSON)

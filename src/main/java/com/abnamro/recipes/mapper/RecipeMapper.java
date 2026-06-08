@@ -1,5 +1,6 @@
 package com.abnamro.recipes.mapper;
 
+import com.abnamro.recipes.dto.IngredientResponse;
 import com.abnamro.recipes.dto.RecipeRequest;
 import com.abnamro.recipes.dto.RecipeResponse;
 import com.abnamro.recipes.model.Ingredient;
@@ -18,7 +19,7 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface RecipeMapper {
 
-    @Mapping(target = "ingredients", qualifiedByName = "toStringList")
+    @Mapping(target = "ingredients", qualifiedByName = "toIngredientResponseList")
     RecipeResponse toResponse(Recipe recipe);
 
     List<RecipeResponse> toResponseList(List<Recipe> recipes);
@@ -37,19 +38,20 @@ public interface RecipeMapper {
     @Mapping(target = "ingredients", qualifiedByName = "toIngredientList")
     void updateEntityFromRequest(RecipeRequest request, @MappingTarget Recipe recipe);
 
-    /** Extracts the name from each {@link Ingredient} to produce a plain string list for the response DTO. */
-    @Named("toStringList")
-    default List<String> toStringList(List<Ingredient> ingredients) {
+    @Named("toIngredientResponseList")
+    default List<IngredientResponse> toIngredientResponseList(List<Ingredient> ingredients) {
         if (ingredients == null) return List.of();
-        return ingredients.stream().map(Ingredient::getName).toList();
+        return ingredients.stream()
+                .map(i -> new IngredientResponse(i.getName(), i.getAmount()))
+                .toList();
     }
 
-    /** Wraps each ingredient name string into an {@link Ingredient} entity; IDs are left unset and assigned on persist. */
+    /** Wraps each {@link IngredientResponse} DTO into an {@link Ingredient} entity; IDs are left unset and assigned on persist. */
     @Named("toIngredientList")
-    default List<Ingredient> toIngredientList(List<String> names) {
-        if (names == null) return new ArrayList<>();
-        return names.stream()
-                .map(name -> Ingredient.builder().name(name).build())
+    default List<Ingredient> toIngredientList(List<IngredientResponse> dtos) {
+        if (dtos == null) return new ArrayList<>();
+        return dtos.stream()
+                .map(dto -> Ingredient.builder().name(dto.name()).amount(dto.amount()).build())
                 .toList();
     }
 }

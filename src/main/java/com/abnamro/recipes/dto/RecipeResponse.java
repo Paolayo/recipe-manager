@@ -18,7 +18,7 @@ public record RecipeResponse(
         @Schema(description = "Number of servings", example = "4")
         int servings,
         @Schema(description = "List of ingredients")
-        List<String> ingredients,
+        List<IngredientResponse> ingredients,
         @Schema(description = "Cooking instructions")
         String instructions,
         @Schema(description = "Creation timestamp")
